@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/superskyy/TinyApp/issues"
   },
-  "homepage": "https://github.com/superskyy/TinyApp#readme"
+  "homepage": "https://github.com/superskyy/TinyApp#readme",
+  "dependencies": {
+    "express": "^4.16.4"
+  }
 }
