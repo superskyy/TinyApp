@@ -8,12 +8,18 @@
   <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
   <title>TinyApp</title>
 </head>
+
+<header>
+    <% include ./partials/_header %>
+</header>
+
 <body style="font-size:20px; padding:50px;">
-    <h1>TinyAPP</h1>
-
-    <a href="">Create New TinyURL</a>
-
-    <h4>TinyURL for <%= longURL%></h4>
-    <p><%= shortURL%></p>
+    <!-- <h1>TinyAPP</h1> -->
+    
+      <a href="">Create New TinyURL</a>
+      <div>
+      <h4 style="padding-top: 15px;">TinyURL for <%= longURL%></h4>
+      <p><%= shortURL%></p>
+      </div>
 </body>
 </html>
