@@ -1,6 +1,8 @@
 var express = require("express");
 var app = express();
 var PORT = 8080; // default port 8080
+const bodyParser = require("body-parser");
+app.use(bodyParser.urlencoded({extended: true}));
 
 app.set('view engine', 'ejs');
 
@@ -11,6 +13,11 @@ var urlDatabase = {
 
 app.get("/", (req, res) => {
   res.send("Hello!");
+});
+
+//urls_new
+app.get("/urls/new", (req, res) => {
+  res.render("urls_new");
 });
 
 app.get("/hello", (req, res) => {
