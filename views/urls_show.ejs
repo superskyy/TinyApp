@@ -15,9 +15,16 @@
 
 <body style="font-size:20px; padding:50px;">
     <!-- <h1>TinyAPP</h1> -->
+
       <div>
-      <h4 style="padding-top: 15px;">TinyURL for <%= longURL%></h4>
-      <p><%= shortURL%></p>
+        <h4 style="padding-top: 15px;">TinyURL for <%= longURL%></h4>
+        <p><%= shortURL%></p>
+          <div>
+            <form method="POST" action="/urls/<%=shortURL%>">
+              <p>Update your URL <input name="longURL" type="text"></p>
+              <button type="submit" class="btn btn-primary" value="Update">Update</button>          
+            </form>
+          </div>
       </div>
 </body>
 </html>

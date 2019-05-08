@@ -16,15 +16,21 @@
 <body style="font-size:20px; padding:50px;">
     <div>
 	    <h2>My URLs</h2>
-		<ul>
-		    <% for (url in urls) { %>
-		        <li><%= url %> - <%= urls[url] %></li>
-		        <form method="POST" action="/urls/<%= url %>/delete">
-					<input type="submit" value="Delete">
-				</form>
-		    <% }; %>
-		</ul>
-		
+	    <div>
+			<ul>
+			    <% for (url in urls) { %>
+				    <li><%= url %> - <%= urls[url] %>
+						<form style="display:inline-block" method="GET" action="/urls/<%=url%> ">
+							<button type="submit" class="btn btn-primary" value="edit">Edit</button>
+						</form>
+
+						<form style="display:inline-block" method="POST" action="/urls/<%= url %>/delete">
+							<button type="submit" class="btn btn-primary" value="Delete">Delete</button>
+						</form>
+					</li>
+			    <% }; %>
+			</ul>
+		</div>
 	</div>
 </body>
 </html>
