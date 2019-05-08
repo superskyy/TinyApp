@@ -15,13 +15,16 @@
 
 <body style="font-size:20px; padding:50px;">
     <div>
-	    <a href="">Create New TinyURL</a>
 	    <h2>My URLs</h2>
 		<ul>
 		    <% for (url in urls) { %>
 		        <li><%= url %> - <%= urls[url] %></li>
+		        <form method="POST" action="/urls/<%= url %>/delete">
+					<input type="submit" value="Delete">
+				</form>
 		    <% }; %>
 		</ul>
+		
 	</div>
 </body>
 </html>
