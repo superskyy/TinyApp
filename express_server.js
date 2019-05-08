@@ -44,22 +44,21 @@ app.get("/hello", (req, res) => {
   res.send("<html><body>Hello <b>World</b></body></html>\n");
 });
 
+app.get("/u/:shortURL", (req, res) => {
+  var longURL = urlDatabase[req.params.shortURL];
+  res.redirect(longURL);
+});
+
 app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { shortURL: req.params.shortURL, longURL: urlDatabase[req.params.shortURL] };
   res.render("urls_show", templateVars);
 });
 
-app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[shortURL];
-  res.redirect(longURL);
-});
-
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
   var shortString = generateRandomString();
-  var longString = req.body.longURL;
-  urlDatabase[shortString] = longString;
-  // res.send("ok");        // Respond with 'Ok' (we will replace this)
+  // var longString = req.body.longURL;
+  urlDatabase[shortString] = req.body.longURL;
   res.redirect("/urls/" + shortString);
 });
 
