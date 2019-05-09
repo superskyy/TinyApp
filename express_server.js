@@ -25,10 +25,10 @@ app.get("/urls/new", (req, res) => {
   res.render("urls_new", templateVars);
 });
 
-app.get("/hello", (req, res) => {
-  let templateVars = { greeting: 'Hello World!' };
-  res.render("hello_world", templateVars);
-});
+// app.get("/hello", (req, res) => {
+//   let templateVars = { greeting: 'Hello World!' };
+//   res.render("hello_world", templateVars);
+// });
 
 app.get("/urls", (req, res) => {
   let templateVars = { 
