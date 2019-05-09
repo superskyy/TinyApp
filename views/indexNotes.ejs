@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Document</title>
+</head>
+<body>
+	
+
+	<% if (user) { %>
+		<h2>Hello <%=user.username%></h2>
+		<h3>Cookies: <%user.favCookie%></h3>
+	<%} else {%>
+	<h2>Login</h2>
+	<form action="/login" method="post">
+		<input type="text" name="username">
+		<input type="password" name="password"></input>
+	</form>
+
+	<%}%>
+</body>
+</html>
+
