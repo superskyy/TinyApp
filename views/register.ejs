@@ -1,20 +1,25 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+	  <!-- Bootstrap CSS -->
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.2.1/css/bootstrap.min.css" integrity="sha384-GJzZqFGwb1QTTN6wy59ffF1BuGJpLSa9DkKMp0DgiMDm4iYMj70gZWKYbI706tWS" crossorigin="anonymous">
 	<title>Registration</title>
 </head>
 
-	<header>
-	    <% include ./partials/_header %>
-	</header>
-
 <body>
-	<h4>Registration</h4>
+	<h1>TinyAPP</h1>
+	<h3>Create Acount</h3>
+
+	<a href='/urls/'>Login</a> <span> | </span><a href='/register'>Register</a>
+
 	<form method="POST" action="/register">
-			<label for="email"><b>Email</b></label>
+			<label for="email"><b>Email:</b></label>
 		    <input type="email" placeholder="Enter Email" name="email">
 
-		    <label for="password"><b>Password</b></label>
+		    <label for="password"><b>Password:</b></label>
 		    <input type="password" placeholder="Enter Password" name="password">
 
 		    <button type="submit" class="btn btn-primary">Register</button>

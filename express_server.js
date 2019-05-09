@@ -12,6 +12,8 @@ app.use(cookieParser());
 
 app.set('view engine', 'ejs');
 
+
+
 const users = { 
   "userRandomID": {
     id: "userRandomID", 
@@ -69,10 +71,9 @@ app.get("/u/:shortURL", (req, res) => {
 
 //GET register
 app.get("/register", (req, res) => {
-  // let templateVars = {
-  // 	id: id,
-  // }
-  res.render("register", { username: undefined })
+	// console.log({username: undefined});
+  const templateVars = { username: req.cookies["username"], error: undefined}
+  res.render("register", templateVars)
 })
 
 app.get("/urls/:shortURL", (req, res) => {
@@ -88,15 +89,16 @@ app.post("/register", (req, res) => {
 	// const username = req.body.username
 	// const password = bcrypt.hashSync(req.body.password, saltRounds)
 	const id = generateRandomString();
-	const username = req.body.email;
+	const email = req.body.email;
 	const password = req.body.password;
 	users[id] = {
 		id: id,
-		email: username,
+		email: email,
 		password: password
 	}
-  	res.cookie("username", username);
-  	console.log(users[id]);
+	res.cookie("password", password);
+  	res.cookie("id", id);
+  	res.cookie("username", email);
 	res.redirect("/urls")
 })
 
@@ -126,6 +128,21 @@ app.listen(PORT, () => {
 
 app.post('/login', function (req, res) {
   const username = req.body.username;
+  const email = username;
+  const password = req.body.password;
+  let loggedInUser = null;
+	for (let userID in users) {
+		  let user = users[userID]
+		  if (email === user.email && password === user.password){
+			  loggedInUser = user;
+			  break;
+		  }
+	}
+	if (!loggedInUser) {
+		  res.send("Email and/or password does not match, try again!", 403)
+		  return;
+		}  
+
   res.cookie("username", username);
   res.redirect("/urls/");
 });
@@ -139,5 +156,10 @@ function generateRandomString() {
 	const random = Math.random().toString(36).substring(2, 8);
 	return random;
 };
+
+//error code 404
+app.use(function(req, res, next) {
+  res.status(404).send('Sorry cant find that!');
+});
 
 
