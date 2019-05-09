@@ -2,22 +2,35 @@ var express = require("express");
 var app = express();
 var PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
+const cookieParser = require('cookie-parser')
 app.use(bodyParser.urlencoded({extended: true}));
 
+app.use(cookieParser())
 
 app.set('view engine', 'ejs');
 
-var urlDatabase = {
+const urlDatabase = {
   "b2xVn2": "http://www.lighthouselabs.ca",
   "9sm5xK": "http://www.google.com"
-  
 };
+
+let templateVars = {
+  username: req.cookies["username"],
+  password: req.cookies["password"]
+  // ... any other vars
+};
+res.render("urls_index", templateVars);
+
+app.post('/login', function (req, res) {
+  const username = req.body.username
+  res.cookie("cookie", username)
+  res.redirect("/urls/")
+})
 
 app.get("/", (req, res) => {
   res.redirect("/urls");
 });
 
-//urls_new
 app.get("/urls/new", (req, res) => {
   res.render("urls_new");
 });
@@ -41,7 +54,7 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  var longURL = urlDatabase[req.params.shortURL];
+  const longURL = urlDatabase[req.params.shortURL];
   res.redirect(longURL);
 });
 
@@ -52,7 +65,7 @@ app.get("/urls/:shortURL", (req, res) => {
 
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
-  var shortString = generateRandomString();
+  const shortString = generateRandomString();
   urlDatabase[shortString] = req.body.longURL;
   res.redirect("/urls/");
 });
@@ -75,7 +88,7 @@ app.listen(PORT, () => {
 });
 
 function generateRandomString() {
-	var random = Math.random().toString(36).substring(2, 8);
+	const random = Math.random().toString(36).substring(2, 8);
 	return random;
 }
 
