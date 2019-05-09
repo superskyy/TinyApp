@@ -63,11 +63,13 @@ app.post("/urls", (req, res) => {
   res.redirect("/urls/");
 });
 
+//delete input
 app.post("/urls/:shortURL/delete", (req, res) => {
 	const shortURL = req.params.shortURL;
 	delete urlDatabase[shortURL];
 	res.redirect('/urls');
 });
+
 
 app.post('/urls/:shortURL', (req, res) => {
 	const shortURL = req.params.shortURL;
@@ -76,16 +78,14 @@ app.post('/urls/:shortURL', (req, res) => {
 	res.redirect('/urls/');
 });
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
-
-app.post('/login', function (req, res) {
+//register
+app.post('/register', function (req, res) {
   const username = req.body.username;
   res.cookie("username", username);
   res.redirect("/urls/");
 });
 
+//logout
 app.post('/logout', function (req, res) {
 	res.clearCookie('username');
 	res.redirect("/urls/");
@@ -96,4 +96,7 @@ function generateRandomString() {
 	return random;
 };
 
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
+});
 

@@ -20,7 +20,7 @@
 			<ul>
 			    <% for (url in urls) { %>
 				    <li>
-				    	<span><%= url %> - <%= urls[url] %></span>
+				    	<span><%= url %> ----> <%= urls[url] %></span>
 
 						<form style="display:inline-block" method="GET" action="/urls/<%=url%> ">
 							<button type="submit" class="btn btn-primary" value="edit">Edit</button>
