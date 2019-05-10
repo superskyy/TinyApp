@@ -88,18 +88,32 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/register", (req, res) => {
 	// const username = req.body.username
 	// const password = bcrypt.hashSync(req.body.password, saltRounds)
-	const id = generateRandomString();
-	const email = req.body.email;
-	const password = req.body.password;
-	users[id] = {
-		id: id,
-		email: email,
-		password: password
-	}
-	res.cookie("password", password);
-  	res.cookie("id", id);
-  	res.cookie("username", email);
+	const ids = generateRandomString();
+	const emails = req.body.email;
+	const passwords = req.body.password;
+
+	let emailExists = false;
+	for (let i in users) {
+		if (users[i].email === emails){
+			emailExists = true;
+		}
+	} 
+	if (!emails || !passwords) {
+		return res.send("Please fill out the fields")
+	} 
+	else if (emailExists) {
+	 	return res.send("The email already exists")
+	 }
+
+	res.cookie("password", passwords);
+  	res.cookie("id", ids);
+  	res.cookie("username", emails);
 	res.redirect("/urls")
+
+	users[ids] = {
+		id: ids, 
+		email: emails, 
+		password: passwords}
 })
 
 app.post("/urls", (req, res) => {
@@ -133,7 +147,7 @@ app.post('/login', function (req, res) {
   let loggedInUser = null;
 	for (let userID in users) {
 		  let user = users[userID]
-		  if (email === user.email && password === user.password){
+	if (email === user.email && password === user.password){
 			  loggedInUser = user;
 			  break;
 		  }
