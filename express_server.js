@@ -146,16 +146,16 @@ app.post('/login', function (req, res) {
   const password = req.body.password;
   let loggedInUser = null;
 	for (let userID in users) {
-		  let user = users[userID]
-	if (email === user.email && password === user.password){
-			  loggedInUser = user;
-			  break;
-		  }
+	  let user = users[userID]
+	  if (email === user.email && password === user.password){
+		loggedInUser = user;
+		break;
+	  }
 	}
 	if (!loggedInUser) {
-		  res.send("Email and/or password does not match, try again!", 403)
-		  return;
-		}  
+	  res.send("Email and/or password does not match, try again!", 403)
+	  return;
+	}  
 
   res.cookie("username", username);
   res.redirect("/urls/");
