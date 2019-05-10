@@ -44,7 +44,8 @@ app.get("/urls/new", (req, res) => {
   const user_id = req.cookies.id
   const user = users[user_id]
   const templateVars = {
-  	user: user
+  	user: users, 
+  	id: res.cookie.user_id
   }
   if (user === undefined) {
 	res.redirect("/login");
@@ -53,19 +54,22 @@ app.get("/urls/new", (req, res) => {
   }
 });
 
-app.get("/hello", (req, res) => {
-  let templateVars = { greeting: 'Hello World!' };
-  res.render("hello_world", templateVars);
-});
+// app.get("/hello", (req, res) => {
+//   let templateVars = { greeting: 'Hello World!' };
+//   res.render("hello_world", templateVars);
+// });
 
 app.get("/urls", (req, res) => {
-  const user_id = req.cookies.user_id
+  const user_id = req.cookies.id
   const user = users[user_id]
+  console.log("test", req.cookies);
   let templateVars = { 
-	urls: urlDatabase,
-	user: user
-  };
-  console.log("user",user, user_id, req.cookies);
+		urls: urlsForUser(req.user_id),
+		user: users,
+		id: req.cookies.user_id
+  }
+  console.log(templateVars)
+  // console.log("user",user, user_id, req.cookies);
   res.render("urls_index", templateVars);
 });
 
@@ -88,26 +92,26 @@ app.get("/u/:shortURL", (req, res) => {
 //GET register
 app.get("/register", (req, res) => {
 	// console.log({username: undefined});
-  const user_id = req.cookies.id
-  const user = users[user_id]
+  if (res.cookie.user_id) {
+  	res.redirect("/urls")
+  }
   const templateVars = { 
-  	user: users
-  	// username: req.cookies["username"], 
-  	// error: undefined
+  	user: users,
+  	id: res.cookie.user_id
   }
   res.render("register", templateVars)
 })
 
-//NEW Login page
+//GET Login page
 app.get("/login", (req, res) => {
 	const user_id = req.cookies.id
-  	const user = users[user_id]
+  const user = users[user_id]
 	const templateVars = { 
-		user: user 
-		// username: req.cookies["username"], 
-		// error: undefined
+		user: users,
+		id: res.cookie.user_id 
 	}
-  	res.render("login", templateVars)
+	console.log("login", users[user_id])
+  res.render("login", templateVars)
 })
 
 
@@ -117,7 +121,8 @@ app.get("/urls/:shortURL", (req, res) => {
   let templateVars = { 
   	shortURL: req.params.shortURL, 
   	longURL: urlDatabase[req.params.shortURL],
-  	user: user
+  	user: users,
+  	id: res.cookie.user_id
   };
   res.render("urls_show", templateVars);
 });
@@ -125,9 +130,9 @@ app.get("/urls/:shortURL", (req, res) => {
 app.post("/register", (req, res) => {
 	// const username = req.body.username
 	// const password = bcrypt.hashSync(req.body.password, saltRounds)
-	const ids = generateRandomString();
-	const emails = req.body.email;
-	const passwords = req.body.password;
+	let ids = generateRandomString();
+	let emails = req.body.email;
+	let passwords = req.body.password;
 	let emailExists = false;
 	for (let i in users) {
 		if (users[i].email === emails){
@@ -140,16 +145,14 @@ app.post("/register", (req, res) => {
 	else if (emailExists) {
 	 	return res.send("The email already exists")
 	 }
-
-	// res.cookie("password", passwords);
-  	res.cookie("id", ids);
-  	// res.cookie("username", emails);
-	res.redirect("/urls")
-
+  res.cookie("user_id", ids);
+	console.log("cookie", ids)
 	users[ids] = {
 		id: ids, 
 		email: emails, 
 		password: passwords}
+
+	res.redirect("/urls")
 })
 
 app.post("/urls", (req, res) => {
@@ -181,13 +184,10 @@ function emailLookup(email){
 }
 
 app.post('/login', function (req, res) {
-  // const username = req.body.username;
-  // const email = username;
-  // const password = req.body.password;
   const email = req.body.email;
   const userId = emailLookup(email);
   const password = req.body.password;
-  console.log(email, password)
+  console.log(userId, email, password)
 
   function emailLookup(email){
 	for (let userId in users){
@@ -212,10 +212,21 @@ app.post('/logout', (req, res) => {
 	res.redirect('/login');
 });
 
+//Functions
 function generateRandomString() {
 	const random = Math.random().toString(36).substring(2, 8);
 	return random;
 };
+
+function urlsForUser(id) {
+	let loggedURLs = {};
+	for (let url in urlDatabase) {
+		if (urlDatabase[url].userID = id) {
+			loggedURLs[url] = urlDatabase[url];
+		}
+	}
+	return loggedURLs
+}
 
 //error code 404
 app.use(function(req, res, next) {

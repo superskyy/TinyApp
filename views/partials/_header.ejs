@@ -10,9 +10,9 @@
 	<body style="font-size:20px; padding:50px;">	
 		<div>
 			<a href="/urls/new">Create New TinyURL</a>
-			<% if(user){ %>
+			<% if(user[id]){ %>
 				<form method="POST" action="/logout">
-		   			<h3>Logged in as: <%= user.email %>!</h3>
+		   			<h3>Logged in as: <%= user[id].email %>!</h3>
 		   			<button type="submit" class="btn btn-primary">Logout</button>
 		   		</form>
 	 		<% } else{ %>  
