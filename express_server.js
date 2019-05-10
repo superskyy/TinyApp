@@ -22,13 +22,13 @@ const users = {
     id: "user2RandomID", 
     email: "user2@example.com", 
     password: "dishwasher-funk"
+  },
+  "user3RandomID" : {
+  	id: "user3RandomID", 
+    email: "mike@amazon.ca", 
+    password: "a"
   }
 }
-
-// const urlDatabase = {
-//   "b2xVn2": "http://www.lighthouselabs.ca",
-//   "9sm5xK": "http://www.google.com"
-// };
 
 //New urlDatabase with two user keys
 const urlDatabase = {
@@ -59,12 +59,13 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
-  const user_id = req.cookies.id
+  const user_id = req.cookies.user_id
   const user = users[user_id]
   let templateVars = { 
 	urls: urlDatabase,
 	user: user
   };
+  console.log("user",user, user_id, req.cookies);
   res.render("urls_index", templateVars);
 });
 
@@ -171,30 +172,39 @@ app.post('/urls/:shortURL', (req, res) => {
 	res.redirect('/urls/');
 });
 
-
-
-app.post('/login', function (req, res) {
-  const username = req.body.username;
-  const email = username;
-  const password = req.body.password;
-  const id = users.id;
-  console.log(id)
-  let loggedInUser = null;
-	for (let userID in users) {
-	  let user = users[userID]
-	  console.log(user)
-	  if (id === user.id){
-		loggedInUser = user;
-		break;
+function emailLookup(email){
+	for (userId in users){
+	  if (email === users[userId].email){
+	    return userId;
 	  }
 	}
-	if (!loggedInUser) {
-	  res.send("Email and/or password does not match, try again!", 403)
-	  return;
-	}  
+}
 
-  res.cookie("username", username);
-  res.redirect('/urls/');
+app.post('/login', function (req, res) {
+  // const username = req.body.username;
+  // const email = username;
+  // const password = req.body.password;
+  const email = req.body.email;
+  const userId = emailLookup(email);
+  const password = req.body.password;
+  console.log(email, password)
+
+  function emailLookup(email){
+	for (let userId in users){
+	  if (email === users[userId].email){
+	    return userId;
+	  }
+	}
+  }
+  if (!userId) {
+  	res.send("Email not match, try again! 403");
+  } else if (password !== users[userId].password){
+  	res.send("Password does not match, try again!403");
+  } else {
+
+  res.cookie("user_id", users[userId].id);
+  res.redirect("/urls");
+  }
 });
 
 app.post('/logout', (req, res) => {
