@@ -41,7 +41,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-  const user_id = req.cookies.id
+  const user_id = req.cookies.user_id
   const user = users[user_id]
   const templateVars = {
   	user: users, 
@@ -60,11 +60,11 @@ app.get("/urls/new", (req, res) => {
 // });
 
 app.get("/urls", (req, res) => {
-  const user_id = req.cookies.id
+  const user_id = req.cookies.user_id
   const user = users[user_id]
   console.log("test", req.cookies);
   let templateVars = { 
-		urls: urlsForUser(req.user_id),
+		urls: urlsForUser(req.cookies.user_id),
 		user: users,
 		id: req.cookies.user_id
   }
@@ -85,7 +85,7 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/u/:shortURL", (req, res) => {
-  const longURL = urlDatabase[req.params.shortURL];
+  const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
 });
 
@@ -118,13 +118,17 @@ app.get("/login", (req, res) => {
 app.get("/urls/:shortURL", (req, res) => {
   const user_id = req.cookies.id
   const user = users[user_id]
-  let templateVars = { 
-  	shortURL: req.params.shortURL, 
-  	longURL: urlDatabase[req.params.shortURL],
-  	user: users,
-  	id: res.cookie.user_id
-  };
-  res.render("urls_show", templateVars);
+  if (user_id === user) {
+    let templateVars = { 
+    	shortURL: req.params.shortURL, 
+    	longURL: urlDatabase[req.params.shortURL].longURL,
+    	user: users,
+    	id: res.cookie.user_id
+    };
+    res.render("urls_show", templateVars);
+  } else {
+    res.send("Access Denied")
+  }
 });
 
 app.post("/register", (req, res) => {
@@ -158,7 +162,9 @@ app.post("/register", (req, res) => {
 app.post("/urls", (req, res) => {
   console.log(req.body);  // Log the POST request body to the console
   const shortString = generateRandomString();
-  urlDatabase[shortString] = req.body.longURL;
+  const longURL = req.body.longURL;
+  const userID = req.cookies.user_id;
+  urlDatabase[shortString] = {longURL: longURL, userID: userID};
   res.redirect("/urls/");
 });
 
@@ -225,7 +231,7 @@ function urlsForUser(id) {
 			loggedURLs[url] = urlDatabase[url];
 		}
 	}
-	return loggedURLs
+	return loggedURLs;
 }
 
 //error code 404

@@ -15,10 +15,9 @@
 
 <body style="font-size:20px; padding:50px;">
       <div>
-        <h4 style="padding-top: 15px;">TinyURL for <%= longURL%></h4>
-        <p><%= shortURL%></p>
+        <h4><% shortURL %></h4> <a href= <%= "/u/" + shortURL %> ><%= longURL %></a>
           <div>
-            <form method="POST" action="/urls/<%=shortURL%>">
+            <form method="POST" action="/urls/<%= shortURL%>">
               <p>Update your URL <input name="longURL" type="text"></p>
               <button type="submit" class="btn btn-primary" value="Update">Update</button>          
             </form>

@@ -16,12 +16,13 @@
     	<% include ./partials/_header %>
 	</header>
     <div>
-	    <h2>My URLs</h2>
+    	<h2>My URLs</h2>
+    	<% if (user) {%>
 	    <div>
 		  <ul>
-			<% for (url in urls) { %>
+			 <% for (url in urls) { %>
 			  <li>
-				<span><%= url %> ----> <%= urls[url].longURL %></span>
+				<span><%= url %> -- <%= urls[url].longURL %></span>
 
 				  <form style="display:inline-block" method="GET" action="/urls/<%=url%> ">
 					<button type="submit" class="btn btn-primary" value="edit">Edit</button>
@@ -31,7 +32,10 @@
 					<button type="submit" class="btn btn-primary" value="Delete">Delete</button>
 				  </form>
 			  </li>
-			<% }; %>
+			  <% } %>
+			<% } else {; %>
+			<p>Login or Register</p>
+			<% } %>
 		  </ul>
 		</div>
 	</div>
