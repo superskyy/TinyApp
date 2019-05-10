@@ -17,21 +17,21 @@
     <div>
 	    <h2>My URLs</h2>
 	    <div>
-			<ul>
-			    <% for (url in urls) { %>
-				    <li>
-				    	<span><%= url %> ----> <%= urls[url] %></span>
+		  <ul>
+			<% for (url in urls) { %>
+			  <li>
+				<span><%= url %> ----> <%= urls[url].longURL %></span>
 
-						<form style="display:inline-block" method="GET" action="/urls/<%=url%> ">
-							<button type="submit" class="btn btn-primary" value="edit">Edit</button>
-						</form>
+				  <form style="display:inline-block" method="GET" action="/urls/<%=url%> ">
+					<button type="submit" class="btn btn-primary" value="edit">Edit</button>
+				  </form>
 
-						<form style="display:inline-block" method="POST" action="/urls/<%= url %>/delete">
-							<button type="submit" class="btn btn-primary" value="Delete">Delete</button>
-						</form>
-					</li>
-			    <% }; %>
-			</ul>
+				  <form style="display:inline-block" method="POST" action="/urls/<%= url %>/delete">
+					<button type="submit" class="btn btn-primary" value="Delete">Delete</button>
+				  </form>
+			  </li>
+			<% }; %>
+		  </ul>
 		</div>
 	</div>
 </body>

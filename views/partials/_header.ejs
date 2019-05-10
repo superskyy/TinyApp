@@ -7,25 +7,25 @@
     <h1>TinyAPP</h1>
 
 </header>
-<body>	
-	<div>
-		<a href="/urls/new">Create New TinyURL</a>
-		<% if(username){ %>
-			<form method="POST" action="/logout">
-	   			<h3>Logged in as: <%= username %>!</h3>
-	   			<button type="submit" class="btn btn-primary">Logout</button>
-	   		</form>
- 		<% } else{ %>  
-   			<form method="POST" action="/login">
-			<label for="username"><b>Username</b></label>
-		    <input type="email" placeholder="Enter Username" name="username">
+	<body style="font-size:20px; padding:50px;">	
+		<div>
+			<a href="/urls/new">Create New TinyURL</a>
+			<% if(user){ %>
+				<form method="POST" action="/logout">
+		   			<h3>Logged in as: <%= user.email %>!</h3>
+		   			<button type="submit" class="btn btn-primary">Logout</button>
+		   		</form>
+	 		<% } else{ %>  
+	   			<form method="POST" action="/login">
+				<label for="username"><b>Email</b></label>
+			    <input type="email" placeholder="Enter Username" name="username">
 
-		    <label for="psw"><b>Password</b></label>
-		    <input type="password" placeholder="Enter Password" name="password">
+			    <label for="password"><b>Password</b></label>
+			    <input type="password" placeholder="Enter Password" name="password">
 
-		    <button type="submit" class="btn btn-primary">Login</button>
-			</form>
-		<% } %>
-	</div>
-</body>
+			    <button type="submit" class="btn btn-primary">Login</button>
+				</form>
+			<% } %>
+		</div>
+	</body>
 </html>

@@ -12,8 +12,6 @@ app.use(cookieParser());
 
 app.set('view engine', 'ejs');
 
-
-
 const users = { 
   "userRandomID": {
     id: "userRandomID", 
@@ -27,9 +25,15 @@ const users = {
   }
 }
 
+// const urlDatabase = {
+//   "b2xVn2": "http://www.lighthouselabs.ca",
+//   "9sm5xK": "http://www.google.com"
+// };
+
+//New urlDatabase with two user keys
 const urlDatabase = {
-  "b2xVn2": "http://www.lighthouselabs.ca",
-  "9sm5xK": "http://www.google.com"
+  b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
+  i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
 };
 
 app.get("/", (req, res) => {
@@ -37,10 +41,16 @@ app.get("/", (req, res) => {
 });
 
 app.get("/urls/new", (req, res) => {
-	const templateVars = {
-		username: req.cookies["username"]
-	}
-  res.render("urls_new", templateVars);
+  const user_id = req.cookies.id
+  const user = users[user_id]
+  const templateVars = {
+  	user: user
+  }
+  if (user === undefined) {
+	res.redirect("/login");
+  } else {
+    return res.render("urls_new", templateVars);
+  }
 });
 
 app.get("/hello", (req, res) => {
@@ -49,15 +59,20 @@ app.get("/hello", (req, res) => {
 });
 
 app.get("/urls", (req, res) => {
+  const user_id = req.cookies.id
+  const user = users[user_id]
   let templateVars = { 
 	urls: urlDatabase,
-	username: req.cookies["username"] 
+	user: user
   };
   res.render("urls_index", templateVars);
 });
 
 app.get("/urls.json", (req, res) => {
   res.json(urlDatabase);
+});
+app.get("/id", (req, res) => {
+  res.json(users);
 });
 
 app.get("/hello", (req, res) => {
@@ -72,15 +87,36 @@ app.get("/u/:shortURL", (req, res) => {
 //GET register
 app.get("/register", (req, res) => {
 	// console.log({username: undefined});
-  const templateVars = { username: req.cookies["username"], error: undefined}
+  const user_id = req.cookies.id
+  const user = users[user_id]
+  const templateVars = { 
+  	user: users
+  	// username: req.cookies["username"], 
+  	// error: undefined
+  }
   res.render("register", templateVars)
 })
 
+//NEW Login page
+app.get("/login", (req, res) => {
+	const user_id = req.cookies.id
+  	const user = users[user_id]
+	const templateVars = { 
+		user: user 
+		// username: req.cookies["username"], 
+		// error: undefined
+	}
+  	res.render("login", templateVars)
+})
+
+
 app.get("/urls/:shortURL", (req, res) => {
+  const user_id = req.cookies.id
+  const user = users[user_id]
   let templateVars = { 
   	shortURL: req.params.shortURL, 
   	longURL: urlDatabase[req.params.shortURL],
-  	username: req.cookies['username']
+  	user: user
   };
   res.render("urls_show", templateVars);
 });
@@ -91,7 +127,6 @@ app.post("/register", (req, res) => {
 	const ids = generateRandomString();
 	const emails = req.body.email;
 	const passwords = req.body.password;
-
 	let emailExists = false;
 	for (let i in users) {
 		if (users[i].email === emails){
@@ -105,9 +140,9 @@ app.post("/register", (req, res) => {
 	 	return res.send("The email already exists")
 	 }
 
-	res.cookie("password", passwords);
+	// res.cookie("password", passwords);
   	res.cookie("id", ids);
-  	res.cookie("username", emails);
+  	// res.cookie("username", emails);
 	res.redirect("/urls")
 
 	users[ids] = {
@@ -136,18 +171,19 @@ app.post('/urls/:shortURL', (req, res) => {
 	res.redirect('/urls/');
 });
 
-app.listen(PORT, () => {
-  console.log(`Example app listening on port ${PORT}!`);
-});
+
 
 app.post('/login', function (req, res) {
   const username = req.body.username;
   const email = username;
   const password = req.body.password;
+  const id = users.id;
+  console.log(id)
   let loggedInUser = null;
 	for (let userID in users) {
 	  let user = users[userID]
-	  if (email === user.email && password === user.password){
+	  console.log(user)
+	  if (id === user.id){
 		loggedInUser = user;
 		break;
 	  }
@@ -158,12 +194,12 @@ app.post('/login', function (req, res) {
 	}  
 
   res.cookie("username", username);
-  res.redirect("/urls/");
+  res.redirect('/urls/');
 });
 
-app.post('/logout', function (req, res) {
-	res.clearCookie('username');
-	res.redirect("/urls/");
+app.post('/logout', (req, res) => {
+	res.clearCookie('id');
+	res.redirect('/login');
 });
 
 function generateRandomString() {
@@ -176,4 +212,6 @@ app.use(function(req, res, next) {
   res.status(404).send('Sorry cant find that!');
 });
 
-
+app.listen(PORT, () => {
+  console.log(`Example app listening on port ${PORT}!`);
+});
