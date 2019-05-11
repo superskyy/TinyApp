@@ -3,7 +3,7 @@ const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
-// const bcrypt = require('bcrypt');
+const bcrypt = require('bcrypt');
 // const saltRounds = 12;
 
 app.use(bodyParser.urlencoded({extended: true}));
@@ -143,10 +143,9 @@ app.post("/register", (req, res) => {
 			emailExists = true;
 		}
 	} 
-	if (!emails || !passwords) {
-		return res.send("Please fill out the fields")
-	} 
-	else if (emailExists) {
+  	if (!emails || !passwords) {
+  		return res.send("Please fill out the fields")
+  	} else if (emailExists) {
 	 	return res.send("The email already exists")
 	 }
   res.cookie("user_id", ids);
@@ -181,13 +180,7 @@ app.post('/urls/:shortURL', (req, res) => {
 	res.redirect("/urls/");
 });
 
-function emailLookup(email){
-	for (userId in users){
-	  if (email === users[userId].email){
-	    return userId;
-	  }
-	}
-}
+
 
 app.post('/login', function (req, res) {
   const email = req.body.email;
@@ -195,13 +188,6 @@ app.post('/login', function (req, res) {
   const password = req.body.password;
   console.log(userId, email, password)
 
-  function emailLookup(email){
-	for (let userId in users){
-	  if (email === users[userId].email){
-	    return userId;
-	  }
-	}
-  }
   if (!userId) {
   	res.send("Email not match, try again! 403");
   } else if (password !== users[userId].password){
@@ -234,6 +220,13 @@ function urlsForUser(id) {
 	return loggedURLs;
 }
 
+function emailLookup(email){
+  for (userId in users){
+    if (email === users[userId].email){
+      return userId;
+    }
+  }
+}
 //error code 404
 app.use(function(req, res, next) {
   res.status(404).send('Sorry cant find that!');
