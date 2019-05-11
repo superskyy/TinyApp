@@ -77,15 +77,19 @@ app.get("/urls/new", (req, res) => {
 app.get("/urls", (req, res) => {
   const user_id = req.session.user_id
   const user = users[user_id]
-  console.log(user_id, 'user_id')
-  console.log(users, 'users')
-  let templateVars = { 
-		urls: urlsForUser(req.session.user_id),
-		user: users,
-		id: req.session.user_id
+  console.log(user_id)
+  console.log(users)
+  if (user_id in users) {
+    let templateVars = { 
+  		urls: urlsForUser(user_id),
+  		user: user,
+  		id: req.session.user_id
+    }
+    console.log("USER", templateVars)
+    res.render("urls_index", templateVars);
+  } else {
+    res.send("Access Denied!")
   }
-  console.log(templateVars)
-  res.render("urls_index", templateVars);
 });
 
 app.get("/urls.json", (req, res) => {
@@ -220,7 +224,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/logout', (req, res) => {
-	res.session = {};
+	req.session.user_id = null;
 	res.redirect('/login');
 });
 
