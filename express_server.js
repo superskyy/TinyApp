@@ -1,17 +1,19 @@
+// NPM MODULES //
 const express = require("express");
 const app = express();
 const PORT = 8080; // default port 8080
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const bcrypt = require('bcrypt');
-// const saltRounds = 12;
+
+// MIDDLEWARE //
+app.set('view engine', 'ejs');
 
 app.use(bodyParser.urlencoded({extended: true}));
 
 app.use(cookieParser());
 
-app.set('view engine', 'ejs');
-
+// DATABASE USERS //
 const users = { 
   "userRandomID": {
     id: "userRandomID", 
@@ -30,16 +32,20 @@ const users = {
   }
 }
 
-//New urlDatabase with two user keys
+// DATABASE URL //
 const urlDatabase = {
   b6UTxQ: { longURL: "https://www.tsn.ca", userID: "aJ48lW" },
   i3BoGr: { longURL: "https://www.google.ca", userID: "aJ48lW" }
 };
 
+
+// ROUTES //
+
 app.get("/", (req, res) => {
   res.redirect("/urls");
 });
 
+// Render page for adding a new short url 
 app.get("/urls/new", (req, res) => {
   const user_id = req.cookies.user_id
   const user = users[user_id]
@@ -91,10 +97,9 @@ app.get("/u/:shortURL", (req, res) => {
 
 //GET register
 app.get("/register", (req, res) => {
-	// console.log({username: undefined});
-  if (res.cookie.user_id) {
-  	res.redirect("/urls")
-  }
+  // if (res.cookie.user_id) {
+  // 	res.redirect("/urls")
+  // }
   const templateVars = { 
   	user: users,
   	id: res.cookie.user_id
