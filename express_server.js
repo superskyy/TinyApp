@@ -138,10 +138,11 @@ app.get("/urls/:shortURL", (req, res) => {
 
 app.post("/register", (req, res) => {
 	// const username = req.body.username
-	// const password = bcrypt.hashSync(req.body.password, saltRounds)
+	
 	let ids = generateRandomString();
 	let emails = req.body.email;
 	let passwords = req.body.password;
+  const hashedPassword = bcrypt.hashSync(passwords, 10);
 	let emailExists = false;
 	for (let i in users) {
 		if (users[i].email === emails){
@@ -158,7 +159,7 @@ app.post("/register", (req, res) => {
 	users[ids] = {
 		id: ids, 
 		email: emails, 
-		password: passwords}
+		password: hashedPassword}
 
 	res.redirect("/urls")
 })
@@ -195,7 +196,7 @@ app.post('/login', function (req, res) {
 
   if (!userId) {
   	res.send("Email not match, try again! 403");
-  } else if (password !== users[userId].password){
+  } else if (!bcrypt.compareSync(password, users[userId].password)){
   	res.send("Password does not match, try again!403");
   } else {
 
