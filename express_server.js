@@ -1,7 +1,7 @@
 // NPM MODULES //
 const express = require("express");
 const app = express();
-const PORT = 8080; // default port 8080
+const PORT = 8080;
 const bodyParser = require("body-parser");
 const cookieParser = require("cookie-parser");
 const bcrypt = require('bcrypt');
@@ -39,7 +39,7 @@ const users = {
     email: "mike@amazon.ca", 
     password: "a"
   }
-}
+};
 
 // DATABASE URL //
 const urlDatabase = {
@@ -49,15 +49,14 @@ const urlDatabase = {
 
 
 // ROUTES //
-
 app.get("/", (req, res) => {
   res.redirect("/urls");
 });
 
 // Render page for adding a new short url 
 app.get("/urls/new", (req, res) => {
-  const user_id = req.session.user_id
-  const user = users[user_id]
+  const user_id = req.session.user_id;
+  const user = users[user_id];
   const templateVars = {
   	user: users, 
   	id: req.session.user_id
@@ -69,16 +68,9 @@ app.get("/urls/new", (req, res) => {
   }
 });
 
-// app.get("/hello", (req, res) => {
-//   let templateVars = { greeting: 'Hello World!' };
-//   res.render("hello_world", templateVars);
-// });
-
 app.get("/urls", (req, res) => {
-  const user_id = req.session.user_id
-  const user = users[user_id]
-  console.log(user_id)
-  console.log(users)
+  const user_id = req.session.user_id;
+  const user = users[user_id];
   if (user_id in users) {
     let templateVars = { 
   		urls: urlsForUser(user_id),
@@ -99,10 +91,6 @@ app.get("/id", (req, res) => {
   res.json(users);
 });
 
-app.get("/hello", (req, res) => {
-  res.send("<html><body>Hello <b>World</b></body></html>\n");
-});
-
 app.get("/u/:shortURL", (req, res) => {
   const longURL = urlDatabase[req.params.shortURL].longURL;
   res.redirect(longURL);
@@ -115,23 +103,23 @@ app.get("/register", (req, res) => {
   	id: req.session.user_id
   }
   res.render("register", templateVars)
-})
+});
 
 //GET Login page
 app.get("/login", (req, res) => {
-	const user_id = req.session.id
-  const user = users[user_id]
+	const user_id = req.session.id;
+  const user = users[user_id];
 	const templateVars = { 
 		user: users,
 		id: req.session.user_id 
 	}
   res.render("login", templateVars)
-})
+});
 
 
 app.get("/urls/:shortURL", (req, res) => {
-  const user_id = req.session.id
-  const user = users[user_id]
+  const user_id = req.session.id;
+  const user = users[user_id];
   const shortURL = req.params.shortURL;
   if (user_id === user) {
     let templateVars = { 
@@ -142,13 +130,11 @@ app.get("/urls/:shortURL", (req, res) => {
     };
     res.render("urls_show", templateVars);
   } else {
-    res.send("Access Denied")
+    res.send("Access Denied");
   }
 });
 
 app.post("/register", (req, res) => {
-	// const username = req.body.username
-	
 	let ids = generateRandomString();
 	let emails = req.body.email;
 	let passwords = req.body.password;
@@ -160,9 +146,9 @@ app.post("/register", (req, res) => {
 		}
 	} 
   	if (!emails || !passwords) {
-  		return res.send("Please fill out the fields")
+  		return res.send("Please fill out the fields");
   	} else if (emailExists) {
-	 	return res.send("The email already exists")
+	 	return res.send("The email already exists");
 	 }
   req.session.user_id = ids;
 	users[ids] = {
@@ -171,8 +157,8 @@ app.post("/register", (req, res) => {
 		password: hashedPassword
   }
 
-	res.redirect("/urls")
-})
+	res.redirect("/urls");
+});
 
 app.post("/urls", (req, res) => {
   const shortURL = generateRandomString();
@@ -242,7 +228,7 @@ function urlsForUser(id) {
 		}
 	}
 	return loggedURLs;
-}
+};
 
 function emailLookup(email){
   for (userId in users){
@@ -250,7 +236,8 @@ function emailLookup(email){
       return userId;
     }
   }
-}
+};
+
 //error code 404
 app.use(function(req, res, next) {
   res.status(404).send('Sorry cant find that!');
